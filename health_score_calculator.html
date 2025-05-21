@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧮 Team Health Score Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        
+        h1, h2, h3 {
+            color: #2c5282;
+        }
+        
+        .calculator-container {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .section-title {
+            font-weight: bold;
+            font-size: 1.1em;
+            color: #2c5282;
+        }
+        
+        .section-score {
+            font-weight: bold;
+            padding: 3px 8px;
+            border-radius: 4px;
+            background-color: #ebf4ff;
+        }
+        
+        .metric-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .metric-item:last-child {
+            border-bottom: none;
+        }
+        
+        .metric-label {
+            flex-grow: 1;
+        }
+        
+        .metric-points {
+            width: 50px;
+            text-align: right;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        
+        .positive {
+            color: #2f855a;
+        }
+        
+        .negative {
+            color: #e53e3e;
+        }
+        
+        .neutral {
+            color: #718096;
+        }
+        
+        .total-score {
+            font-size: 1.5em;
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #2c5282;
+            color: white;
+            border-radius: 6px;
+        }
+        
+        .score-breakdown {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .score-item {
+            flex: 1;
+            min-width: 200px;
+            padding: 10px;
+            background-color: #edf2f7;
+            border-radius: 4px;
+            text-align: center;
+        }
+        
+        .reset-button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #4a5568;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-top: 20px;
+        }
+        
+        .reset-button:hover {
+            background-color: #2d3748;
+        }
+        
+        input[type="checkbox"] {
+            transform: scale(1.2);
+        }
+        
+        select {
+            padding: 5px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        
+        @media (max-width: 768px) {
+            .score-item {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>🧮 Team Health Score Calculator</h1>
+    <p>Use this calculator to simulate your team's health score based on our signals.</p>
+    
+    <div class="calculator-container">
+        <div class="section">
+            <div class="section-header">
+                <span class="section-title">📞 Voice Communication</span>
+                <span class="section-score" id="voice-communication-score">0</span>
+            </div>
+            <div class="metric-item">
+                <span class="metric-label">Phone Call (at least 1 check-in call)</span>
+                <span class="metric-points positive">+15</span>
+                <input type="checkbox" data-section="voice-communication" data-points="15">
+            </div>
+            <div class="metric-item">
+                <span class="metric-label">Video Meeting (at least 1 video client meeting)</span>
+                <span class="metric-points positive">+20</span>
+                <input type="checkbox" data-section="voice-communication" data-points="20">
+            </div>
+            <div class="metric-item">
+                <span class="metric-label">In-Person Meeting (at least 1 in-person client meeting)</span>
+                <span class="metric-points positive">+20</span>
+                <input type="checkbox" data-section="voice-communication" data-points="20">
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-header">
+                <span class="section-title">📧 Client Communication</span>
+                <span class="section-score" id="client-communication-score">0</span>
+            </div>
+            <div class="metric-item">
+                <span class="metric-label">Voicemail (at least 1 voicemail)</span>
+                <span class="metric-points positive">+5</span>
+                <input type="checkbox" data-section="client-communication" data-points="5">
+            </div>
+            <div class="metric-item">
+                <span class="metric-label">Email Follow-Up (email following client call attempt)</span>
+                <span class="metric-points positive">+5</span>
+                <input type="checkbox" data-section="client-communication" data-points="5">
+            </div>
+            <div class="metric-item">
+                <span class="metric-label">Email Communication (email to client, excluding reports)</span>
+                <span class="metric-points positive">+5</span>
+                <input type="checkbox" data-section="client-communication" data-points="5">
+            </div>
+            <div class="metric-item">
+                <span class="metric-label">Channel Touchpoints (each active service line submits on time)</span>
+                <span class="metric-points positive">+5</span>
+                <input type="checkbox" data-section="client-communication" data-points="5">
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-header">
+                <span class="section-title">⚠️ Communication Penalties</span>
+                <span class="section-score" id="communication-penalties-score">0</span>
+            </div>
+            <div class="metric-item">
+                <span class="metric-label">No Voice Communication (no voice communication logged)</span>
+                <span class="metric-points negative">-10</span>
+                <input type="checkbox" data-section="communication-penalties" data-points="-10">
+            </div>
+            <div class="metric-item">
+                <span class="metric-label">Missed Communication (no communication in last 45 days)</span>
+                <span class="metric-points negative">-10</span>
+                <input type="checkbox" data-section="communication-penalties" data-points="-10">
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-header">
+                <span class="section-title">✅ Accountability Metrics</span>
+                <span class="section-score" id="accountability-metrics-score">0</span>
+            </div>
+            <div class="metric-item">
+                <span class="metric-label">Plan Adherence (all planned tasks completed)</span>
+                <span class="metric-points positive">+10</span>
+                <input type="checkbox" data-section="accountability-metrics" data-points="10">
+            </div>
+            <div class="metric-item">
+                <span class="metric-label">Client Request (time logged meets 30% of monthly budget)</span>
+                <span class="metric-points positive">+7</span>
+                <input type="checkbox" data-section="accountability-metrics" data-points="7">
+            </div>
+            <div class="metric-item">
+                <span class="metric-label">Implementation Time (time entered for PPG optimization AND logged to Account Management)</span>
+                <span class="metric-points positive">+6</span>
+                <input type="checkbox" data-section="accountability-metrics" data-points="6">
+            </div>
+            <div class="metric-item">
+                <span class="metric-label">Client Approvals (unlocked client task type complete >75%)</span>
+                <span class="metric-points positive">+7</span>
+                <input type="checkbox" data-section="accountability-metrics" data-points="7">
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-header">
+                <span class="section-title">📊 Reporting Requirements</span>
+                <span class="section-score" id="reporting-requirements-score">0</span>
+            </div>
+            <div class="metric-item">
+                <span class="metric-label">Report Submission</span>
+                <select id="report-timing" data-section="reporting-requirements">
+                    <option value="-15">No report submitted (-15)</option>
+                    <option value="15">By 15th of month (+15)</option>
+                    <option value="10">By 20th of month (+10)</option>
+                    <option value="-5">After month-end (-5)</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-header">
+                <span class="section-title">🚫 Service Line Changes</span>
+                <span class="section-score" id="service-line-changes-score">0</span>
+            </div>
+            <div class="metric-item">
+                <span class="metric-label">Deactivations Logged (no service deactivation within 90 days)</span>
+                <span class="metric-points positive">+5</span>
+                <input type="checkbox" data-section="service-line-changes" data-points="5">
+            </div>
+            <div class="metric-item">
+                <span class="metric-label">Deactivation Request (team requested service line deactivation)</span>
+                <span class="metric-points negative">-15</span>
+                <input type="checkbox" data-section="service-line-changes" data-points="-15">
+            </div>
+            <div class="metric-item">
+                <span class="metric-label">Service Line Change (deactivation approved and completed)</span>
+                <span class="metric-points negative">-10</span>
+                <input type="checkbox" data-section="service-line-changes" data-points="-10">
+            </div>
+            <div class="metric-item">
+                <span class="metric-label">LOOP Deactivation (team requested Loop deactivation)</span>
+                <span class="metric-points negative">-5</span>
+                <input type="checkbox" data-section="service-line-changes" data-points="-5">
+            </div>
+            <div class="metric-item">
+                <span class="metric-label">Account Churn (complete account churn)</span>
+                <span class="metric-points negative">-35</span>
+                <input type="checkbox" data-section="service-line-changes" data-points="-35">
+            </div>
+            <div class="metric-item">
+                <span class="metric-label">Service Line Resume (service line resumed within 90 days)</span>
+                <span class="metric-points positive">+10</span>
+                <input type="checkbox" data-section="service-line-changes" data-points="10">
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-header">
+                <span class="section-title">😊 Client Sentiment (NPS Scores)</span>
+                <span class="section-score" id="client-sentiment-score">0</span>
+            </div>
+            <div class="metric-item">
+                <span class="metric-label">NPS Score</span>
+                <select id="nps-score" data-section="client-sentiment">
+                    <option value="0">No selection (0)</option>
+                    <option value="10">NPS Score > 10 (+10)</option>
+                    <option value="9">NPS Score = 9 (+9)</option>
+                    <option value="8">NPS Score = 7/8 (+8)</option>
+                    <option value="-5">NPS Score = 6 (-5)</option>
+                    <option value="-10">NPS Score ≤ 5 (-10)</option>
+                    <option value="5">No Response to NPS (+5)</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-header">
+                <span class="section-title">💰 Budget Management</span>
+                <span class="section-score" id="budget-management-score">0</span>
+            </div>
+            <div class="metric-item">
+                <span class="metric-label">Maintain Budget (no changes to budget)</span>
+                <span class="metric-points positive">+5</span>
+                <input type="checkbox" data-section="budget-management" data-points="5">
+            </div>
+            <div class="metric-item">
+                <span class="metric-label">Budget Decrease (team has budget decrease)</span>
+                <span class="metric-points negative">-15</span>
+                <input type="checkbox" data-section="budget-management" data-points="-15">
+            </div>
+            <div class="metric-item">
+                <span class="metric-label">Budget Increase (team has budget increase)</span>
+                <span class="metric-points positive">+10</span>
+                <input type="checkbox" data-section="budget-management" data-points="10">
+            </div>
+            <div class="metric-item">
+                <span class="metric-label">Cross Sells (new cross sell)</span>
+                <span class="metric-points positive">+15</span>
+                <input type="checkbox" data-section="budget-management" data-points="15">
+            </div>
+            <div class="metric-item">
+                <span class="metric-label">POC Consistency (no internal POC changes)</span>
+                <span class="metric-points positive">+5</span>
+                <input type="checkbox" data-section="budget-management" data-points="5">
+            </div>
+        </div>
+        
+        <div class="total-score">
+            Total Health Score: <span id="total-score">0</span>
+        </div>
+        
+        <div class="score-breakdown">
+            <div class="score-item">
+                <div>Communication & Touchpoints</div>
+                <div id="communication-total">0</div>
+                <div class="neutral">(Range: 5-40)</div>
+            </div>
+            <div class="score-item">
+                <div>Accountability & Reporting</div>
+                <div id="accountability-total">0</div>
+                <div class="neutral">(Range: 5-30)</div>
+            </div>
+            <div class="score-item">
+                <div>Deactivations & Service Changes</div>
+                <div id="deactivations-total">0</div>
+                <div class="neutral">(Range: -35 to -10)</div>
+            </div>
+            <div class="score-item">
+                <div>Client Sentiment</div>
+                <div id="sentiment-total">0</div>
+                <div class="neutral">(Range: -10 to 10)</div>
+            </div>
+            <div class="score-item">
+                <div>Budget Management</div>
+                <div id="budget-total">0</div>
+                <div class="neutral">(Range: -15 to 15)</div>
+            </div>
+        </div>
+        
+        <button class="reset-button" id="reset-calculator">Reset Calculator</button>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize section scores
+            const sectionScores = {
+                'voice-communication': 0,
+                'client-communication': 0,
+                'communication-penalties': 0,
+                'accountability-metrics': 0,
+                'reporting-requirements': 0,
+                'service-line-changes': 0,
+                'client-sentiment': 0,
+                'budget-management': 0
+            };
+            
+            // Group sections for the breakdown display
+            const sectionGroups = {
+                'communication-total': ['voice-communication', 'client-communication', 'communication-penalties'],
+                'accountability-total': ['accountability-metrics', 'reporting-requirements'],
+                'deactivations-total': ['service-line-changes'],
+                'sentiment-total': ['client-sentiment'],
+                'budget-total': ['budget-management']
+            };
+            
+            // Function to calculate and update scores
+            function updateScores() {
+                // Reset all section scores
+                Object.keys(sectionScores).forEach(section => {
+                    sectionScores[section] = 0;
+                });
+                
+                // Calculate scores from checkboxes
+                document.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
+                    const section = checkbox.getAttribute('data-section');
+                    const points = parseInt(checkbox.getAttribute('data-points'));
+                    sectionScores[section] += points;
+                });
+                
+                // Calculate scores from select elements
+                document.querySelectorAll('select').forEach(select => {
+                    const section = select.getAttribute('data-section');
+                    const points = parseInt(select.value);
+                    sectionScores[section] += points;
+                });
+                
+                // Update section score displays
+                Object.keys(sectionScores).forEach(section => {
+                    const scoreElement = document.getElementById(`${section}-score`);
+                    if (scoreElement) {
+                        scoreElement.textContent = sectionScores[section];
+                        
+                        // Apply color based on score
+                        if (sectionScores[section] > 0) {
+                            scoreElement.className = 'section-score positive';
+                        } else if (sectionScores[section] < 0) {
+                            scoreElement.className = 'section-score negative';
+                        } else {
+                            scoreElement.className = 'section-score neutral';
+                        }
+                    }
+                });
+                
+                // Calculate total score
+                const totalScore = Object.values(sectionScores).reduce((sum, score) => sum + score, 0);
+                document.getElementById('total-score').textContent = totalScore;
+                
+                // Update section group totals
+                Object.keys(sectionGroups).forEach(groupId => {
+                    const sections = sectionGroups[groupId];
+                    const groupTotal = sections.reduce((sum, section) => sum + sectionScores[section], 0);
+                    document.getElementById(groupId).textContent = groupTotal;
+                    
+                    // Apply color based on score
+                    const element = document.getElementById(groupId);
+                    if (groupTotal > 0) {
+                        element.className = 'positive';
+                    } else if (groupTotal < 0) {
+                        element.className = 'negative';
+                    } else {
+                        element.className = 'neutral';
+                    }
+                });
+            }
+            
+            // Add event listeners to all inputs
+            document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                checkbox.addEventListener('change', updateScores);
+            });
+            
+            document.querySelectorAll('select').forEach(select => {
+                select.addEventListener('change', updateScores);
+            });
+            
+            // Reset button functionality
+            document.getElementById('reset-calculator').addEventListener('click', function() {
+                document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+                
+                document.querySelectorAll('select').forEach(select => {
+                    select.selectedIndex = 0;
+                });
+                
+                updateScores();
+            });
+            
+            // Initialize scores on page load
+            updateScores();
+        });
+    </script>
+</body>
+</html>
